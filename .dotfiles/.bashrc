@@ -10,6 +10,7 @@ HISTCONTROL=ignorespace:ignoredups:erasedups
 
 # append to the history file, don't overwrite it
 shopt -s histappend
+shopt -s autocd
 HISTSIZE=1000
 HISTFILESIZE=5000
 
