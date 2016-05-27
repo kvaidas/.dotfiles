@@ -47,3 +47,9 @@ fi
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
+
+# locales
+if locale -a | grep -q lt_LT.UTF-8; then
+  export LANG=lt_LT.UTF-8
+  export LC_MESSAGES=C.UTF-8
+fi
