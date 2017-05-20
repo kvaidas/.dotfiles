@@ -8,8 +8,7 @@ DOTIGNORE=(.git README.md dotscript.sh)
 if [ -d "$DF" ]; then
     NOW=$(date +%s)
     LAST_UPDATED=$(date -r "$DF" +%s)
-    #if ((   $(( NOW - LAST_UPDATED )) < $(( 3600*24*17 ))   )); then
-    if ((   $(( NOW - LAST_UPDATED )) < $(( 17 ))   )); then
+    if ((   $(( NOW - LAST_UPDATED )) < $(( 3600*24*17 ))   )); then
         if (( VERBOSE >= 1 ));
             then echo "Dotfiles updated recently."
         fi
