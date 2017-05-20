@@ -2,7 +2,7 @@
 
 VERBOSE=2
 DF="$HOME/.dotfiles"
-DOTIGNORE=(.git README.md dotscript.sh)
+DOTIGNORE=(.git .gitignore README.md dotscript.sh)
 
 # Check if installed and freshness
 if [ -d "$DF" ]; then
