@@ -43,7 +43,7 @@ function update_symlinks {
             if (( VERBOSE >= 1 )); then
                 echo "Dotdir $FROM/$dotfile to $TO/$dotfile";
             fi
-            mkdir -p $TO
+            mkdir -p "$TO/$dotfile"
             update_symlinks "$FROM/$dotfile" "$TO/$dotfile"
         elif [ ! -e "$TO/$dotfile" ]; then
             if (( VERBOSE >= 1 )); then
