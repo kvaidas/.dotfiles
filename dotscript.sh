@@ -49,7 +49,7 @@ function update_symlinks {
             if (( VERBOSE >= 1 )); then
                 echo "Linking $FROM/$dotfile to $TO/$dotfile";
             fi
-            ln -s "$TO/$dotfile" "$FROM/$dotfile"
+            ln -s "$FROM/$dotfile" "$TO/$dotfile"
         elif [ ! -L "$TO/$dotfile" ]; then
             if (( VERBOSE >= 2 )); then
                 echo "Non-symlink: $TO/$dotfile, diff from $FROM/$dotfile:"
