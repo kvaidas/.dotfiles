@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERBOSE=2
+VERBOSE=1
 DF="$HOME/.dotfiles"
 DOTIGNORE=(.git .gitignore README.md dotscript.sh)
 
@@ -30,17 +30,17 @@ function update_symlinks {
     local FROM=$1
     local TO=$2
     ls -1A "$FROM" | while read dotfile; do
-        if (( VERBOSE >= 1 )); then
+        if (( VERBOSE >= 2 )); then
             echo "Dotfile $FROM/$dotfile to dir $TO";
         fi
         if [[ "${DOTIGNORE[*]}" =~ "$dotfile" ]]; then
-            if (( VERBOSE >= 1 )); then
+            if (( VERBOSE >= 2 )); then
                 echo "Dotignore: $dotfile"
             fi
             return
         fi
         if [ -d "$FROM/$dotfile" ]; then
-            if (( VERBOSE >= 1 )); then
+            if (( VERBOSE >= 2 )); then
                 echo "Dotdir $FROM/$dotfile to $TO/$dotfile";
             fi
             mkdir -p "$TO/$dotfile"
