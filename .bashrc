@@ -41,6 +41,36 @@ alias l='ls -CF'
 
 # locales
 if locale -a | grep -q lt_LT.UTF-8; then
-  export LANG=lt_LT.UTF-8
-  export LC_MESSAGES=POSIX
+    export LANG=lt_LT.UTF-8
+    export LC_MESSAGES=POSIX
 fi
+
+# enable bash-completion if available
+BASH_COMPLETION_SCRIPTS=(
+    '/etc/bash_completion/' # Debian/Ubuntu
+    '/usr/local/etc/bash_completion' # Mac brew
+)
+
+for SCRIPT in "${BASH_COMPLETION_SCRIPTS[@]}"; do
+    if [ -f "$SCRIPT" ]; then
+        . "$SCRIPT"
+        break
+    fi
+done
+
+# enable git-prompt if available
+GIT_PROMPT_SCRIPTS=(
+    '/usr/lib/git-core/git-sh-prompt' # Debian/Ubuntu
+    '/usr/local/etc/bash_completion.d/git-prompt.sh' # Mac brew
+)
+export GIT_PS1_SHOWDIRTYSTATE=true
+export GIT_PS1_SHOWCOLORHINTS=true
+export GIT_PS1_UNTRACKEDFILES=true
+
+for SCRIPT in "${GIT_PROMPT_SCRIPTS[@]}"; do
+    if [ -f $SCRIPT ]; then
+        . $SCRIPT
+        PS1=$(  echo "$PS1" | sed 's#\\\$ $#$(__git_ps1 " (%s)") $ #'  )
+        break
+    fi
+done
