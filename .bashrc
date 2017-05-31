@@ -63,9 +63,11 @@ GIT_PROMPT_SCRIPTS=(
     '/usr/lib/git-core/git-sh-prompt' # Debian/Ubuntu
     '/usr/local/etc/bash_completion.d/git-prompt.sh' # Mac brew
 )
-export GIT_PS1_SHOWDIRTYSTATE=true
-export GIT_PS1_SHOWCOLORHINTS=true
-export GIT_PS1_UNTRACKEDFILES=true
+export GIT_PS1_SHOWDIRTYSTATE="true"
+export GIT_PS1_SHOWCOLORHINTS="true"
+export GIT_PS1_UNTRACKEDFILES="true"
+export GIT_PS1_SHOWSTASHSTATE="true"
+export GIT_PS1_SHOWUPSTREAM="auto"
 
 for SCRIPT in "${GIT_PROMPT_SCRIPTS[@]}"; do
     if [ -f $SCRIPT ]; then
