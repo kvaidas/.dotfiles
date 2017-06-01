@@ -67,13 +67,13 @@ export GIT_PS1_SHOWDIRTYSTATE="true"
 export GIT_PS1_SHOWCOLORHINTS="true"
 export GIT_PS1_UNTRACKEDFILES="true"
 export GIT_PS1_SHOWSTASHSTATE="true"
-export GIT_PS1_SHOWUPSTREAM="auto"
+export GIT_PS1_SHOWUPSTREAM="verbose"
 
 for SCRIPT in "${GIT_PROMPT_SCRIPTS[@]}"; do
     if [ -f $SCRIPT ]; then
         . $SCRIPT
         PS1_COPY="$PS1"
-        PROMPT_COMMAND='__git_ps1 "" " $PS1_COPY"'
+        PROMPT_COMMAND='__git_ps1 "" "$PS1_COPY" "(%s) "'
         break
     fi
 done
