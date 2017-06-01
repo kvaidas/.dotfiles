@@ -37,7 +37,7 @@ function update_symlinks {
             if (( VERBOSE >= 2 )); then
                 echo "Dotignore: $dotfile"
             fi
-            return
+            continue
         fi
         if [ -d "$FROM/$dotfile" ]; then
             if (( VERBOSE >= 2 )); then
