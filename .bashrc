@@ -72,7 +72,8 @@ export GIT_PS1_SHOWUPSTREAM="auto"
 for SCRIPT in "${GIT_PROMPT_SCRIPTS[@]}"; do
     if [ -f $SCRIPT ]; then
         . $SCRIPT
-        PS1=$(  echo "$PS1" | sed 's#\\\$ $#$(__git_ps1 " (%s)") $ #'  )
+        PS1_COPY="$PS1"
+        PROMPT_COMMAND='__git_ps1 "" " $PS1_COPY"'
         break
     fi
 done
