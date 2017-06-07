@@ -62,6 +62,7 @@ done
 GIT_PROMPT_SCRIPTS=(
     '/usr/lib/git-core/git-sh-prompt' # Debian/Ubuntu
     '/usr/local/etc/bash_completion.d/git-prompt.sh' # Mac brew
+    '/usr/share/git-core/contrib/completion/git-prompt.sh' # RHEL
 )
 export GIT_PS1_SHOWDIRTYSTATE="true"
 export GIT_PS1_SHOWCOLORHINTS="true"
