@@ -4,6 +4,11 @@ case $- in
       *) return;;
 esac
 
+PATH=$HOME/bin:$PATH
+
+# Source machine-local rcfiles
+for rcfile in $(find . -maxdepth 1 -name .bashrca*); do source $rcfile ; done
+
 # Don't record in history: repeated lines and ones beginning with a space
 # Also, remove from history all the lines like the one being executed
 HISTCONTROL=ignorespace:ignoredups:erasedups
