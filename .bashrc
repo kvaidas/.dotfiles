@@ -19,15 +19,7 @@ shopt -s autocd
 HISTSIZE=1000
 HISTFILESIZE=5000
 
-color_prompt=yes
-if [ "$color_prompt" = yes ]; then
-    PS1='${chroot:+($chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-else
-    PS1='${chroot:+($chroot)}\u@\h:\w\$ '
-fi
-unset color_prompt 
-
-# enable color support of ls and also add handy aliases
+# Enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
     alias ls='ls --color=auto'
@@ -39,23 +31,22 @@ if [ -x /usr/bin/dircolors ]; then
     alias less='less -M'
 fi
 
-# some more ls aliases
+# Some more ls aliases
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
 
-# locales
+# Locales
 if locale -a | grep -q lt_LT.UTF-8; then
     export LANG=lt_LT.UTF-8
     export LC_MESSAGES=POSIX
 fi
 
-# enable bash-completion if available
+# Enable bash-completion if available
 BASH_COMPLETION_SCRIPTS=(
     '/etc/bash_completion/' # Debian/Ubuntu
     '/usr/local/etc/bash_completion' # Mac brew
 )
-
 for SCRIPT in "${BASH_COMPLETION_SCRIPTS[@]}"; do
     if [ -f "$SCRIPT" ]; then
         . "$SCRIPT"
@@ -63,7 +54,16 @@ for SCRIPT in "${BASH_COMPLETION_SCRIPTS[@]}"; do
     fi
 done
 
-# enable git-prompt if available
+# Prom
+color_prompt=yes
+if [ "$color_prompt" = yes ]; then
+    PS1='${chroot:+($chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+else
+    PS1='${chroot:+($chroot)}\u@\h:\w\$ '
+fi
+unset color_prompt 
+
+# Enable git-prompt if available
 GIT_PROMPT_SCRIPTS=(
     '/usr/lib/git-core/git-sh-prompt' # Debian/Ubuntu
     '/usr/local/etc/bash_completion.d/git-prompt.sh' # Mac brew
@@ -75,11 +75,31 @@ export GIT_PS1_UNTRACKEDFILES="true"
 export GIT_PS1_SHOWSTASHSTATE="true"
 export GIT_PS1_SHOWUPSTREAM="verbose"
 
+function generate_prompt {
+    # Show non-zero exit code
+    BELL=$'\a'
+    if [ 0 -ne $1 ]; then
+        EXIT_CODE_MESSAGE="\a\[\033[0;31\]mExit code: $1"
+        echo ${EXIT_CODE_MESSAGE@P}
+    fi
+
+    # Show if there are background jobs present
+    JOBS='\j'
+    JOBS=${JOBS@P}
+    if [ "0" != $JOBS ]; then
+        JOBS="\[\033[1;33\]m(${JOBS})"
+        echo -n ${JOBS@P}
+    fi
+
+    # Git prompt
+    __git_ps1 "" "$PS1_COPY" "(%s) "
+}
+
 for SCRIPT in "${GIT_PROMPT_SCRIPTS[@]}"; do
     if [ -f $SCRIPT ]; then
         . $SCRIPT
         PS1_COPY="$PS1"
-        PROMPT_COMMAND='__git_ps1 "" "$PS1_COPY" "(%s) "'
+        PROMPT_COMMAND='generate_prompt $?'
         break
     fi
 done
