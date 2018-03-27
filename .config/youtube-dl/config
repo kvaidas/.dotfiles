@@ -1,3 +1,4 @@
 --write-sub
 --embed-subs
 --sub-lang lt,en,ru
+-o '%(uploader)s (%(upload_date)s) %(title)s.%(ext)s'
