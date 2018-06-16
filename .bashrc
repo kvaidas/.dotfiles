@@ -18,6 +18,7 @@ shopt -s histappend
 shopt -s autocd
 HISTSIZE=1000
 HISTFILESIZE=5000
+HISTTIMEFORMAT='%F %T '
 
 # Enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
