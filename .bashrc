@@ -43,6 +43,10 @@ if locale -a | grep -q lt_LT.UTF-8; then
     export LC_MESSAGES=POSIX
 fi
 
+# Program settings
+export GREP_OPTIONS='--color=yes'
+export LESS='--RAW-CONTROL-CHARS'
+
 # Enable bash-completion if available
 BASH_COMPLETION_SCRIPTS=(
     '/etc/bash_completion/' # Debian/Ubuntu
