@@ -50,7 +50,7 @@ export LESS='--RAW-CONTROL-CHARS'
 # Enable bash-completion if available
 BASH_COMPLETION_SCRIPTS=(
     '/etc/bash_completion/' # Debian/Ubuntu
-    '/usr/local/etc/bash_completion' # Mac brew
+    '/usr/local/etc/profile.d/bash_completion.sh' # Mac brew
 )
 for SCRIPT in "${BASH_COMPLETION_SCRIPTS[@]}"; do
     if [ -f "$SCRIPT" ]; then
