@@ -15,7 +15,6 @@ HISTCONTROL=ignorespace:ignoredups:erasedups
 
 # append to the history file, don't overwrite it
 shopt -s histappend
-shopt -s autocd
 HISTSIZE=1000
 HISTFILESIZE=5000
 HISTTIMEFORMAT='%F %T '
@@ -59,14 +58,8 @@ for SCRIPT in "${BASH_COMPLETION_SCRIPTS[@]}"; do
     fi
 done
 
-# Prom
-color_prompt=yes
-if [ "$color_prompt" = yes ]; then
-    PS1='${chroot:+($chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-else
-    PS1='${chroot:+($chroot)}\u@\h:\w\$ '
-fi
-unset color_prompt 
+# Prompts
+PS1='${chroot:+($chroot)}\e[01;32m\]\u@\h\e[0m\]:\e[01;34m\]\w\e[00m\]\$ '
 
 # Enable git-prompt if available
 GIT_PROMPT_SCRIPTS=(
@@ -81,22 +74,46 @@ export GIT_PS1_SHOWSTASHSTATE="true"
 export GIT_PS1_SHOWUPSTREAM="verbose"
 
 function generate_prompt {
-    # Show non-zero exit code
-    BELL=$'\a'
+    # Non-zero exit code
     if [ 0 -ne $1 ]; then
-        EXIT_CODE_MESSAGE="\a\[\033[0;31\]mExit code: $1"
+        EXIT_CODE_MESSAGE="\a\e[0;31\]mExit code: $1\e[0m"
         echo ${EXIT_CODE_MESSAGE@P}
     fi
 
-    # Show if there are background jobs present
+    # Background jobs
     JOBS='\j'
     JOBS=${JOBS@P}
     if [ "0" != $JOBS ]; then
-        JOBS="\[\033[1;33\]m(${JOBS})"
+        JOBS="\e[1;33\]m(${JOBS})\e[0m"
         echo -n ${JOBS@P}
     fi
 
-    # Git prompt
+    # Old bash version
+    if [ "$BASH_VERSINFO" != 5 ]; then
+        echo " $BASH_VERSINFO "
+    fi
+
+    # Python virtualenv
+    if [ ! -z "$VIRTUAL_ENV" ]; then
+        echo -en "\e[94m ${VIRTUAL_ENV} \e[0m"
+    fi
+
+    # Vaulted
+    if [ ! -z "$VAULTED_ENV" ]; then
+        echo -en "\e[35m ${VAULTED_ENV} \e[0m"
+    fi
+
+    # Terraform
+    if [ -d .terraform ]; then
+        if [ -e .terraform/environment ]; then
+            terraform_workspace=$(cat .terraform/environment)
+        else
+            terraform_workspace='default'
+        fi
+        echo -en "\e[94m $terraform_workspace \e[0m"
+    fi
+
+    # Git
     __git_ps1 "" "$PS1_COPY" "(%s) "
 }
 
