@@ -59,7 +59,7 @@ for SCRIPT in "${BASH_COMPLETION_SCRIPTS[@]}"; do
 done
 
 # Prompts
-PS1='${chroot:+($chroot)}\e[01;32m\]\u@\h\e[0m\]:\e[01;34m\]\w\e[00m\]\$ '
+PS1='${chroot:+($chroot)}\001\e[01;32m\002\u@\h\001\e[0m\002:\001\e[01;34m\002\w\001\e[00m\002\$ '
 
 # Enable git-prompt if available
 GIT_PROMPT_SCRIPTS=(
@@ -76,7 +76,7 @@ export GIT_PS1_SHOWUPSTREAM="verbose"
 function generate_prompt {
     # Non-zero exit code
     if [ 0 -ne $1 ]; then
-        EXIT_CODE_MESSAGE="\a\e[0;31\]mExit code: $1\e[0m"
+        EXIT_CODE_MESSAGE="\001\a\e[0;31m\002Exit code: $1\001\e[0m\002"
         echo ${EXIT_CODE_MESSAGE@P}
     fi
 
@@ -84,7 +84,7 @@ function generate_prompt {
     JOBS='\j'
     JOBS=${JOBS@P}
     if [ "0" != $JOBS ]; then
-        JOBS="\e[1;33\]m(${JOBS})\e[0m"
+        JOBS="\001\e[1;33m\002(${JOBS})\001\e[0m\002"
         echo -n ${JOBS@P}
     fi
 
@@ -95,12 +95,12 @@ function generate_prompt {
 
     # Python virtualenv
     if [ ! -z "$VIRTUAL_ENV" ]; then
-        echo -en "\e[94m ${VIRTUAL_ENV} \e[0m"
+        echo -en "\001\e[94m\002 ${VIRTUAL_ENV} \001\e[0m\002"
     fi
 
     # Vaulted
     if [ ! -z "$VAULTED_ENV" ]; then
-        echo -en "\e[35m ${VAULTED_ENV} \e[0m"
+        echo -en "\001\e[35m\002 ${VAULTED_ENV} \001\e[0m\002"
     fi
 
     # Terraform
@@ -110,7 +110,7 @@ function generate_prompt {
         else
             terraform_workspace='default'
         fi
-        echo -en "\e[94m $terraform_workspace \e[0m"
+        echo -en "\001\e[94m\002 $terraform_workspace \001\e[0m\002"
     fi
 
     # Git
