@@ -15,26 +15,11 @@ HISTCONTROL=ignorespace:ignoredups:erasedups
 
 # append to the history file, don't overwrite it
 shopt -s histappend
-HISTSIZE=1000
-HISTFILESIZE=5000
+HISTSIZE=5000
 HISTTIMEFORMAT='%F %T '
 
-# Enable color support of ls and also add handy aliases
-if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto'
-    alias cp='cp -i'
-    alias mv='mv -i'
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
-    alias less='less -M'
-fi
-
-# Some more ls aliases
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
+# Aliases
+alias grep='grep --color=auto'
 
 # Locales
 if locale -a | grep -q lt_LT.UTF-8; then
@@ -43,7 +28,6 @@ if locale -a | grep -q lt_LT.UTF-8; then
 fi
 
 # Program settings
-export GREP_OPTIONS='--color=yes'
 export LESS='--RAW-CONTROL-CHARS'
 
 # Enable bash-completion if available
@@ -59,7 +43,7 @@ for SCRIPT in "${BASH_COMPLETION_SCRIPTS[@]}"; do
 done
 
 # Prompts
-PS1='${chroot:+($chroot)}\001\e[01;32m\002\u@\h\001\e[0m\002:\001\e[01;34m\002\w\001\e[00m\002\$ '
+PS1='\[\e[1;32m\]\u@\h\[\e[0m\]:\[\e[1;34m\]\w\[\e[0m\]\$ '
 
 # Enable git-prompt if available
 GIT_PROMPT_SCRIPTS=(
@@ -76,31 +60,35 @@ export GIT_PS1_SHOWUPSTREAM="verbose"
 function generate_prompt {
     # Non-zero exit code
     if [ 0 -ne $1 ]; then
-        EXIT_CODE_MESSAGE="\001\a\e[0;31m\002Exit code: $1\001\e[0m\002"
-        echo ${EXIT_CODE_MESSAGE@P}
+        echo -e "\001\a\e[1;31m\002Exit code: $1\001\e[0m\002"
     fi
+
+    P=""
 
     # Background jobs
     JOBS='\j'
-    JOBS=${JOBS@P}
-    if [ "0" != $JOBS ]; then
-        JOBS="\001\e[1;33m\002(${JOBS})\001\e[0m\002"
-        echo -n ${JOBS@P}
+    if [ "0" != "${JOBS@P}" ]; then
+        P="${P}\[\e[1;33m\](${JOBS@P})\[\e[0m\] "
     fi
 
     # Old bash version
     if [ "$BASH_VERSINFO" != 5 ]; then
-        echo " $BASH_VERSINFO "
+        P="${P}${BASH_VERSINFO} "
     fi
 
     # Python virtualenv
-    if [ ! -z "$VIRTUAL_ENV" ]; then
-        echo -en "\001\e[94m\002 ${VIRTUAL_ENV} \001\e[0m\002"
+    if [ -n "$VIRTUAL_ENV" ]; then
+        P="${P}\[\e[94m\]${VIRTUAL_ENV} \[\e[0m\]"
     fi
 
     # Vaulted
-    if [ ! -z "$VAULTED_ENV" ]; then
-        echo -en "\001\e[35m\002 ${VAULTED_ENV} \001\e[0m\002"
+    if [ -n "$VAULTED_ENV" ]; then
+        expiry=$(date -j -f "%Y-%m-%dT%H:%M:%SZ" "$VAULTED_ENV_EXPIRATION" "+%s")
+        now=$(date -j "+%s")
+        if (( $now > $expiry + 7200 )); then
+            vaulted_expired="!"
+        fi
+        P="${P}\[\e[35m\]${VAULTED_ENV}\[\e[7m\]${vaulted_expired}\[\e[0m\] "
     fi
 
     # Terraform
@@ -110,17 +98,17 @@ function generate_prompt {
         else
             terraform_workspace='default'
         fi
-        echo -en "\001\e[94m\002 $terraform_workspace \001\e[0m\002"
+        P="${P}\[\e[94m\]$terraform_workspace\[\e[0m\] "
     fi
 
     # Git
-    __git_ps1 "" "$PS1_COPY" "(%s) "
+    __git_ps1 "$P" "$PS1_COPY" "(%s) "
 }
 
 for SCRIPT in "${GIT_PROMPT_SCRIPTS[@]}"; do
     if [ -f $SCRIPT ]; then
         . $SCRIPT
-        PS1_COPY="$PS1"
+        PS1_COPY=$PS1
         PROMPT_COMMAND='generate_prompt $?'
         break
     fi
