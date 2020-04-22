@@ -83,12 +83,15 @@ function generate_prompt {
 
     # Vaulted
     if [ -n "$VAULTED_ENV" ]; then
-        expiry=$(date -j -f "%Y-%m-%dT%H:%M:%SZ" "$VAULTED_ENV_EXPIRATION" "+%s")
-        now=$(date -j "+%s")
-        if (( $now > $expiry + 7200 )); then
-            vaulted_expired="!"
+        expiry=$(TZ=UTC date -j -f "%Y-%m-%dT%H:%M:%SZ" "$VAULTED_ENV_EXPIRATION" "+%s")
+        now=$(TZ=UTC date -j "+%s")
+        remaining_time=$(( ($expiry - $now)/60 ))
+        if (( $remaining_time <= 0 )); then
+            expiry_text="\[\e[7m\]!!!"
+        else
+            expiry_text="(${remaining_time})"
         fi
-        P="${P}\[\e[35m\]${VAULTED_ENV}\[\e[7m\]${vaulted_expired}\[\e[0m\] "
+        P="${P}\[\e[35m\]${VAULTED_ENV} ${expiry_text}\[\e[0m\] "
     fi
 
     # Terraform
