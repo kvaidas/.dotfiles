@@ -94,6 +94,19 @@ function generate_prompt {
         P="${P}\[\e[35m\]${VAULTED_ENV} ${expiry_text}\[\e[0m\] "
     fi
 
+    # aws-vault
+    if [ -n "$AWS_SESSION_EXPIRATION" ]; then
+        expiry=$(date -j -f '%Y-%m-%dT%H:%M:%S' ${AWS_SESSION_EXPIRATION:0:19} '+%s')
+        now=$(date '+%s')
+        remaining_time=$(( ($expiry - $now)/60 ))
+        if (( $remaining_time <= 0 )); then
+            expiry_text="\[\e[;31m\]!!!"
+        else
+            expiry_text="(${remaining_time})"
+        fi
+        P="${P}\[\e[;33m\]AWS ${expiry_text}\[\e[0m\] "
+    fi
+
     # Terraform
     if [ -d .terraform ]; then
         if [ -e .terraform/environment ]; then
