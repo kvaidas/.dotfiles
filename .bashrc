@@ -20,6 +20,7 @@ HISTTIMEFORMAT='%F %T '
 
 # Aliases
 alias grep='grep --color=auto'
+alias k='kubectl'
 
 # Locales
 if locale -a | grep -q lt_LT.UTF-8; then
