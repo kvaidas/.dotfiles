@@ -105,7 +105,7 @@ function generate_prompt {
         else
             expiry_text="(${remaining_time})"
         fi
-        P="${P}\[\e[;33m\]AWS ${expiry_text}\[\e[0m\] "
+        P="${P}\[\e[;33m\]${AWS_VAULT} ${expiry_text}\[\e[0m\] "
     fi
 
     # Terraform
