@@ -1,63 +1,68 @@
 #!/bin/bash
 
-VERBOSE=1
-DF="$HOME/.dotfiles"
-DOTIGNORE=(.git .gitignore README.md dotscript.sh)
+verbose=1
+dotfiles="$HOME/.dotfiles"
+dotignore=(.git .gitignore README.md dotscript.sh backups)
 
-# Check if installed and freshness
-if [ -d "$DF" ]; then
-    NOW=$(date +%s)
-    LAST_UPDATED=$(date -r "$DF" +%s)
-    if [ "$1" != '-f' ] &&
-       ((   $(( NOW - LAST_UPDATED )) < $(( 3600*24*17 ))   )); then
-        if (( VERBOSE >= 1 ));
+# Check freshness
+if [ -d "$dotfiles" ]; then
+    now=$(date +%s)
+    last_updated=$(date -r "$dotfiles" +%s)
+    if [ "$1" != '-f' ] && ((   $(( now - last_updated )) < $(( 3600*24*17 ))   )); then
+        if (( verbose >= 1 ));
             then echo "Dotfiles updated recently."
         fi
         exit
     fi
+
     # Update
-    if (( VERBOSE >= 1 )); then echo "Renewing dotfiles"; fi
-    git --git-dir="$DF/.git" --work-tree="$DF" fetch
-    touch "$DF"
-# Install
+    if (( verbose >= 1 )); then echo "Renewing dotfiles"; fi
+    git --git-dir="${dotfiles}/.git" --work-tree="$dotfiles" fetch
+    touch "$dotfiles"
 else
-    if (( VERBOSE >= 1 )); then echo "Installing dotfiles"; fi
-    git clone https://github.com/kvaidas/.dotfiles "$DF"
+    "Dotfile dir \'${dotfiles}\' not found"
 fi
 
-# Update symlinks
 function update_symlinks {
-    local FROM=$1
-    local TO=$2
-    ls -1A "$FROM" | while read dotfile; do
-        if (( VERBOSE >= 2 )); then
-            echo "Dotfile $FROM/$dotfile to dir $TO";
+    local from=$1
+    local to=$2
+    ls -1A "${from}" | while read dotfile; do
+        if (( verbose >= 2 )); then
+            echo "Dotfile ${from}/${dotfile} to dir ${to}";
         fi
-        if [[ "${DOTIGNORE[*]}" =~ "$dotfile" ]]; then
-            if (( VERBOSE >= 2 )); then
-                echo "Dotignore: $dotfile"
+
+        # Skip ignored files
+        if [[ "${dotignore[*]}" =~ $dotfile ]]; then
+            if (( verbose >= 2 )); then
+                echo "Dotignore: ${dotfile}"
             fi
             continue
         fi
-        if [ -d "$FROM/$dotfile" ]; then
-            if (( VERBOSE >= 2 )); then
-                echo "Dotdir $FROM/$dotfile to $TO/$dotfile";
+
+        # This is a dotdir
+        if [ -d "${from}/${dotfile}" ]; then
+            if (( verbose >= 2 )); then
+                echo "Dotdir ${from}/${dotfile} to ${to}/${dotfile}";
             fi
-            mkdir -p "$TO/$dotfile"
-            update_symlinks "$FROM/$dotfile" "$TO/$dotfile"
-        elif [ ! -e "$TO/$dotfile" ]; then
-            if (( VERBOSE >= 1 )); then
-                echo "Linking $FROM/$dotfile to $TO/$dotfile";
-            fi
-            ln -s "$FROM/$dotfile" "$TO/$dotfile"
-        elif [ ! -L "$TO/$dotfile" ]; then
-            if (( VERBOSE >= 1 )); then
-                echo "Non-symlink: $TO/$dotfile, diff from $FROM/$dotfile:"
-                diff -y "$TO/$dotfile" "$FROM/$dotfile"
-            fi
+            mkdir -p "${to}/${dotfile}"
+            update_symlinks "${from}/${dotfile}" "${to}/${dotfile}"
+            continue
         fi
+
+        # Backup non-symlinks
+        if [ ! -L "${to}/${dotfile}" ]; then
+            echo "Non-symlink: ${to}/${dotfile}, backing up to ${from}"
+            mv "${to}/${dotfile}" "${from}/backups/${dotfile}-$(date '+%Y-%m-%dT%H:%M:%S')"
+        fi
+
+        # Symlink dotfile
+        rm -f "${to}/${dotfile}"
+        if (( verbose >= 1 )); then
+            echo "Linking ${from}/${dotfile} to ${to}/${dotfile}";
+        fi
+        ln -s "${from}/${dotfile}" "${to}/${dotfile}"
     done
 }
-update_symlinks "$DF" "$HOME"
 
-if (( VERBOSE >= 1 )); then echo "Dotfile script done"; fi
+# Run the function
+update_symlinks "$dotfiles" "$HOME"
