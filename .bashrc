@@ -97,8 +97,8 @@ function generate_prompt {
 
     # aws-vault
     if [ -n "$AWS_SESSION_EXPIRATION" ]; then
-        expiry=$(date -j -f '%Y-%m-%dT%H:%M:%S' ${AWS_SESSION_EXPIRATION:0:19} '+%s')
-        now=$(date '+%s')
+        expiry=$(TZ=UTC date -j -f '%Y-%m-%dT%H:%M:%S' ${AWS_SESSION_EXPIRATION:0:19} '+%s')
+        now=$(TZ=UTC date '+%s')
         remaining_time=$(( ($expiry - $now)/60 ))
         if (( $remaining_time <= 0 )); then
             expiry_text="\[\e[;31m\]!!!"
