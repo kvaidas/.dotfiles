@@ -43,6 +43,12 @@ for SCRIPT in "${BASH_COMPLETION_SCRIPTS[@]}"; do
     fi
 done
 
+# kubectl completion
+if command -v kubectl > /dev/null; then
+    source <(kubectl completion bash)
+    complete -F __start_kubectl k
+fi
+
 # Prompts
 PS1='\[\e[1;32m\]\u@\h\[\e[0m\]:\[\e[1;34m\]\w\[\e[0m\]\$ '
 
