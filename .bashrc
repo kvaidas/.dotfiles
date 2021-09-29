@@ -106,7 +106,7 @@ function generate_prompt {
         expiry=$(TZ=UTC date -j -f '%Y-%m-%dT%H:%M:%S' ${AWS_SESSION_EXPIRATION:0:19} '+%s')
         now=$(TZ=UTC date '+%s')
         remaining_time=$(( ($expiry - $now)/60 ))
-        if (( $remaining_time <= 0 )); then
+        if (( $remaining_time < 0 )); then
             expiry_text="\[\e[;31m\]!!!"
         else
             expiry_text="(${remaining_time})"
