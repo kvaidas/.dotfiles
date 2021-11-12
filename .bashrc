@@ -124,6 +124,11 @@ function generate_prompt {
         P="${P}\[\e[94m\]$terraform_workspace\[\e[0m\] "
     fi
 
+    # Proxy indicator
+    if [[ -v http_proxy || -v https_proxy || -v HTTP_PROXY || -v HTTPS_PROXY || -v ALL_PROXY ]]; then
+        P="${P}\[\e[35m\]proxy\[\e[0m\] "
+    fi
+
     # Git
     __git_ps1 "$P" "$PS1_COPY" "(%s) "
 }
