@@ -49,6 +49,11 @@ if command -v kubectl > /dev/null; then
     complete -F __start_kubectl k
 fi
 
+# aws-vault completion
+if command -v aws-vault > /dev/null; then
+    source <(aws-vault --completion-script-bash)
+fi
+
 # Prompts
 PS1='\[\e[1;32m\]\u@\h\[\e[0m\]:\[\e[1;34m\]\w\[\e[0m\]\$ '
 
