@@ -54,6 +54,12 @@ if command -v aws-vault > /dev/null; then
     source <(aws-vault --completion-script-bash)
 fi
 
+# Terraform completion
+if command -v terraform > /dev/null; then
+    complete -C terraform terraform
+fi
+
+
 # Prompts
 PS1='\[\e[1;32m\]\u@\h\[\e[0m\]:\[\e[1;34m\]\w\[\e[0m\]\$ '
 
