@@ -2,6 +2,7 @@ set encoding=utf-8
 set guifont=Lucida_Console:h10
 colorscheme slate
 set number
+set relativenumber
 filetype plugin indent on
 set guioptions=amTgr
 set shiftwidth=4
