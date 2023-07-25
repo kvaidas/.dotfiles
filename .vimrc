@@ -14,3 +14,4 @@ let g:skip_loading_mswin=1
 set scrolloff=3
 syntax on
 set mouse=a
+set clipboard=unnamed # use the system clipboard
