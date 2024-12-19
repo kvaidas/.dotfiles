@@ -1,5 +1,5 @@
 [user]
-        name = Vaidas Kascėnas
-        email = vaidas@kascenas.lt
+    name = Vaidas Kascėnas
+    email = vaidas@kascenas.lt
 [credential]
 	helper = cache
