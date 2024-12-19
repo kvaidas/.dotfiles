@@ -7,16 +7,15 @@ esac
 PATH=$HOME/bin:$PATH
 
 # Source machine-local rcfiles
-for rcfile in $(find . -maxdepth 1 -name .bashrc_*); do source $rcfile ; done
+for f in ~/.bashrc_*; do
+    . "$f"
+done
 
-# Don't record in history: repeated lines and ones beginning with a space
-# Also, remove from history all the lines like the one being executed
-HISTCONTROL=ignorespace:ignoredups:erasedups
-
-# append to the history file, don't overwrite it
+# History configuration
 shopt -s histappend
 HISTSIZE=5000
 HISTTIMEFORMAT='%F %T '
+HISTCONTROL=ignorespace:ignoredups:erasedups
 
 # Aliases
 alias grep='grep --color=auto'
@@ -49,16 +48,10 @@ if command -v kubectl > /dev/null; then
     complete -F __start_kubectl k
 fi
 
-# aws-vault completion
-if command -v aws-vault > /dev/null; then
-    source <(aws-vault --completion-script-bash)
-fi
-
 # Terraform completion
 if command -v terraform > /dev/null; then
     complete -C terraform terraform
 fi
-
 
 # Prompts
 PS1='\[\e[1;32m\]\u@\h\[\e[0m\]:\[\e[1;34m\]\w\[\e[0m\]\$ '
@@ -77,7 +70,7 @@ export GIT_PS1_SHOWUPSTREAM="verbose"
 
 function generate_prompt {
     # Non-zero exit code
-    if [ 0 -ne $1 ]; then
+    if [ 0 -ne "$1" ]; then
         echo -e "\001\a\e[1;31m\002Exit code: $1\001\e[0m\002"
     fi
 
@@ -90,39 +83,13 @@ function generate_prompt {
     fi
 
     # Old bash version
-    if [ "$BASH_VERSINFO" != 5 ]; then
-        P="${P}${BASH_VERSINFO} "
+    if [ "${BASH_VERSINFO[0]}" != 5 ]; then
+        P="${P}${BASH_VERSINFO[0]}.${BASH_VERSINFO[1]} "
     fi
 
     # Python virtualenv
     if [ -n "$VIRTUAL_ENV" ]; then
         P="${P}\[\e[94m\]${VIRTUAL_ENV} \[\e[0m\]"
-    fi
-
-    # Vaulted
-    if [ -n "$VAULTED_ENV" ]; then
-        expiry=$(TZ=UTC date -j -f "%Y-%m-%dT%H:%M:%SZ" "$VAULTED_ENV_EXPIRATION" "+%s")
-        now=$(TZ=UTC date -j "+%s")
-        remaining_time=$(( ($expiry - $now)/60 ))
-        if (( $remaining_time <= 0 )); then
-            expiry_text="\[\e[7m\]!!!"
-        else
-            expiry_text="(${remaining_time})"
-        fi
-        P="${P}\[\e[35m\]${VAULTED_ENV} ${expiry_text}\[\e[0m\] "
-    fi
-
-    # aws-vault
-    if [ -n "$AWS_SESSION_EXPIRATION" ]; then
-        expiry=$(TZ=UTC date -j -f '%Y-%m-%dT%H:%M:%S' ${AWS_SESSION_EXPIRATION:0:19} '+%s')
-        now=$(TZ=UTC date '+%s')
-        remaining_time=$(( ($expiry - $now)/60 ))
-        if (( $remaining_time < 0 )); then
-            expiry_text="\[\e[;31m\]!!!"
-        else
-            expiry_text="(${remaining_time})"
-        fi
-        P="${P}\[\e[;33m\]${AWS_VAULT} ${expiry_text}\[\e[0m\] "
     fi
 
     # Terraform
@@ -145,8 +112,8 @@ function generate_prompt {
 }
 
 for SCRIPT in "${GIT_PROMPT_SCRIPTS[@]}"; do
-    if [ -f $SCRIPT ]; then
-        . $SCRIPT
+    if [ -f "$SCRIPT" ]; then
+        . "$SCRIPT"
         PS1_COPY=$PS1
         PROMPT_COMMAND='generate_prompt $?'
         break
