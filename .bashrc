@@ -7,9 +7,7 @@ esac
 PATH=$HOME/bin:$PATH
 
 # Source machine-local rcfiles
-for f in ~/.bashrc_*; do
-    . "$f"
-done
+for f in $(find . -maxdepth 1 -name .bashrc_*); do source "$f" ; done
 
 # History configuration
 shopt -s histappend
@@ -32,7 +30,7 @@ export LESS='--RAW-CONTROL-CHARS'
 
 # Enable bash-completion if available
 BASH_COMPLETION_SCRIPTS=(
-    '/etc/bash_completion/' # Debian/Ubuntu
+    '/etc/bash_completion' # Debian/Ubuntu
     '/usr/local/etc/profile.d/bash_completion.sh' # Mac brew
 )
 for SCRIPT in "${BASH_COMPLETION_SCRIPTS[@]}"; do
