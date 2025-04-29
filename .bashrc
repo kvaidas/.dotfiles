@@ -57,7 +57,8 @@ PS1='\[\e[1;32m\]\u@\h\[\e[0m\]:\[\e[1;34m\]\w\[\e[0m\]\$ '
 # Enable git-prompt if available
 GIT_PROMPT_SCRIPTS=(
     '/usr/lib/git-core/git-sh-prompt' # Debian/Ubuntu
-    '/usr/local/etc/bash_completion.d/git-prompt.sh' # Mac brew
+    '/usr/local/etc/bash_completion.d/git-prompt.sh' # Mac Homebrew
+    '/opt/homebrew/etc/bash_completion.d/git-prompt.sh' # Mac Homebrew on Apple Silicon
     '/usr/share/git-core/contrib/completion/git-prompt.sh' # RHEL
 )
 export GIT_PS1_SHOWDIRTYSTATE="true"
