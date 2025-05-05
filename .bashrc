@@ -30,8 +30,9 @@ export LESS='--RAW-CONTROL-CHARS'
 
 # Enable bash-completion if available
 BASH_COMPLETION_SCRIPTS=(
-    '/etc/bash_completion' # Debian/Ubuntu
-    '/usr/local/etc/profile.d/bash_completion.sh' # Mac brew
+    '/etc/profile.d/bash_completion.sh' # Debian/Ubuntu
+    '/usr/local/etc/profile.d/bash_completion.sh' # Mac Homebrew (Intel)
+    '/opt/homebrew/etc/profile.d/bash_completion.sh' # Mac Homebrew (Apple Silicon)
 )
 for SCRIPT in "${BASH_COMPLETION_SCRIPTS[@]}"; do
     if [ -f "$SCRIPT" ]; then
@@ -57,8 +58,8 @@ PS1='\[\e[1;32m\]\u@\h\[\e[0m\]:\[\e[1;34m\]\w\[\e[0m\]\$ '
 # Enable git-prompt if available
 GIT_PROMPT_SCRIPTS=(
     '/usr/lib/git-core/git-sh-prompt' # Debian/Ubuntu
-    '/usr/local/etc/bash_completion.d/git-prompt.sh' # Mac Homebrew
-    '/opt/homebrew/etc/bash_completion.d/git-prompt.sh' # Mac Homebrew on Apple Silicon
+    '/usr/local/etc/bash_completion.d/git-prompt.sh' # Mac Homebrew (Intel)
+    '/opt/homebrew/etc/bash_completion.d/git-prompt.sh' # Mac Homebrew (Apple Silicon)
     '/usr/share/git-core/contrib/completion/git-prompt.sh' # RHEL
 )
 export GIT_PS1_SHOWDIRTYSTATE="true"
