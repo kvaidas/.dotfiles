@@ -7,7 +7,7 @@ esac
 PATH=$HOME/bin:$PATH
 
 # Source machine-local rcfiles
-for f in $(find . -maxdepth 1 -name .bashrc_*); do source "$f" ; done
+for f in $(find . -maxdepth 1 -name '.bashrc_*'); do source "$f" ; done
 
 # History configuration
 shopt -s histappend
