@@ -16,7 +16,8 @@ HISTTIMEFORMAT='%F %T '
 HISTCONTROL=ignorespace:ignoredups:erasedups
 
 # Aliases
-alias grep='grep --color=auto'
+alias ls='ls --color'
+alias grep='grep --color'
 alias k='kubectl'
 
 # Locales
