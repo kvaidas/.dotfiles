@@ -1,8 +1,8 @@
 #!/bin/bash
 
 verbose=1
-dotfiles="$HOME/.dotfiles"
-dotignore=(.git .gitignore README.md dotscript.sh backups)
+dotfiles="$PWD"
+dotignore=(.git README.md dotscript.sh backups)
 
 # Check freshness
 if [ -d "$dotfiles" ]; then

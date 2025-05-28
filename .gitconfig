@@ -3,3 +3,7 @@
     email = vaidas@kascenas.lt
 [credential]
 	helper = cache
+[core]
+    excludesfile = ~/.gitignore
+[include]
+    path = ~/.gitconfig_*
