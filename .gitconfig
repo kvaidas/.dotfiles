@@ -1,9 +1,11 @@
 [user]
     name = Vaidas Kascėnas
-    email = vaidas@kascenas.lt
+    email = 7950944+kvaidas@users.noreply.github.com
 [credential]
 	helper = cache
 [core]
     excludesfile = ~/.gitignore
 [include]
     path = ~/.gitconfig_local
+[push]
+    autoSetupRemote = true
