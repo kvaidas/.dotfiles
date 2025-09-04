@@ -4,7 +4,13 @@ case $- in
       *) return;;
 esac
 
+# Modify PATH where needed
 PATH=$HOME/bin:$PATH
+for brew in /opt/homebrew/bin/brew /usr/local/bin/brew; do
+    if command -v $brew > /dev/null; then
+        eval $($brew shellenv)
+    fi
+done
 
 # Source machine-local rcfiles
 for f in $(find . -maxdepth 1 -name '.bashrc_*'); do source "$f" ; done
