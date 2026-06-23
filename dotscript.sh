@@ -1,7 +1,7 @@
 #!/bin/bash
 
 verbose=1
-dotfiles="$PWD"
+dotfiles=$(dirname "${BASH_SOURCE[0]}")
 dotignore=(.git README.md dotscript.sh backups)
 
 # Check freshness
@@ -52,7 +52,8 @@ function update_symlinks {
         # Backup non-symlinks
         if [ ! -L "${to}/${dotfile}" ]; then
             echo "Non-symlink: ${to}/${dotfile}, backing up to ${from}"
-            mv "${to}/${dotfile}" "${from}/backups/${dotfile}-$(date '+%Y-%m-%dT%H:%M:%S')"
+            mkdir -p "$dotfiles/backups"
+            mv "${to}/${dotfile}" "${dotfiles}/backups/${dotfile}-$(date '+%Y-%m-%dT%H:%M:%S')"
         fi
 
         # Symlink dotfile
