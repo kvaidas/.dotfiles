@@ -1,1 +1,1 @@
-source .bashrc
+.bash_profile
