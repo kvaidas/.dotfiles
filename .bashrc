@@ -27,10 +27,6 @@ alias grep='grep --color'
 alias k='kubectl'
 
 # Locales
-if [ $(uname) == 'Darwin' ]; then
-    # MacOS has this set to "UTF-8" which gets forwarded via SSH and breaks things
-    export LC_CTYPE=C.UTF-8
-fi
 if command -v locale &> /dev/null; then
     if locale -a | grep -q lt_LT.UTF-8; then
         locale_present=1
@@ -45,6 +41,7 @@ if command -v locale &> /dev/null; then
     else
         echo 'Locale not available for generation'
     fi
+
     if [ -n "$locale_present" ]; then
         export LANG=lt_LT.UTF-8
         export LC_MESSAGES=POSIX
@@ -54,6 +51,7 @@ export TZ=Europe/Vilnius
 
 # Program settings
 export LESS='--RAW-CONTROL-CHARS'
+export TIME_STYLE='long-iso'
 
 # Enable bash-completion if available
 BASH_COMPLETION_SCRIPTS=(
