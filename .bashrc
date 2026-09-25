@@ -43,6 +43,7 @@ if command -v locale &> /dev/null; then
     fi
 
     if [ -n "$locale_present" ]; then
+        export LANGUAGE=en_US:lt_LT
         export LANG=lt_LT.UTF-8
         export LC_MESSAGES=POSIX
     fi
