@@ -12,4 +12,4 @@ set tabstop=4
 set ignorecase
 set scrolloff=3
 set mouse=a
-set clipboard=unnamed " use the system clipboard
+set clipboard=unnamed,unnamedplus " use the system clipboard
